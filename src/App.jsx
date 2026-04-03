@@ -359,6 +359,7 @@ export default function App(){
   };
 
   const card=queue[idx];
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
 
   // ── BATCH MODAL ──
   if(showBatch) return(
@@ -430,7 +431,7 @@ export default function App(){
       {/* HEADER */}
       <div style={{background:C.surface,borderBottom:`1px solid ${C.border}`,padding:"12px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:100}}>
         <div style={{display:"flex",alignItems:"center",gap:8}}>
-          <div style={{width:30,height:30,background:C.primary,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16}}>🇩🇪</div>
+          <div style={{width:30,height:30,background:C.primary,borderRadius:7,display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,color:"#fff",letterSpacing:"0.5px"}}>DE</div>
           <span style={{fontWeight:700,fontSize:15,color:C.text}}>DeutschCards</span>
           {importDate&&<span style={{fontSize:11,color:C.textLight,marginLeft:2}}>· {importDate}</span>}
         </div>
@@ -632,7 +633,11 @@ export default function App(){
             </div>
           </div>
 
-          <p style={{fontFamily:FONT,textAlign:"center",color:C.textLight,fontSize:11,margin:"8px 0 0"}}>Tocá la tarjeta · ←→ navegar</p>
+          <p style={{fontFamily:FONT,textAlign:"center",color:C.textLight,fontSize:11,margin:"8px 0 0"}}>
+            {isMobile
+              ? "Tocá la tarjeta para girar · botones para navegar"
+              : "↑↓ girar · ← → navegar · click para girar"}
+          </p>
 
           <div style={{display:"flex",gap:10,marginTop:16}}>
             <Btn variant="outline" onClick={()=>nav(-1)} style={{flex:1,minHeight:50}}>← Ant.</Btn>

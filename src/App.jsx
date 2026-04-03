@@ -159,14 +159,14 @@ function todayStr(){ return new Date().toISOString().slice(0, 10); }
 
 function load() {
   try {
-    const r = localStorage.getItem("dc_v5");
+    const r = localStorage.getItem("dc_v6");
     if (!r) return null;
     const p = JSON.parse(r);
     return { cards: p.cards || [] };
   } catch { return null; }
 }
 function save(cards) {
-  try { localStorage.setItem("dc_v5", JSON.stringify({ cards })); } catch {}
+  try { localStorage.setItem("dc_v6", JSON.stringify({ cards })); } catch {}
 }
 
 function parseCSV(raw) {
@@ -305,8 +305,14 @@ export default function App() {
 
   useEffect(() => {
     const saved = load();
-    if (saved && saved.cards.length > 0) setCards(saved.cards);
-    else setCards(stamp(SAMPLE_CARDS));
+    if (saved && saved.cards.length > 0) {
+      // Merge: keep existing cards (with progress), add any new SAMPLE_CARDS not yet present
+      const existingKeys = new Set(saved.cards.map(c => c.german + "||" + c.spanish));
+      const newSamples = SAMPLE_CARDS.filter(c => !existingKeys.has(c.german + "||" + c.spanish));
+      setCards([...saved.cards, ...stamp(newSamples)]);
+    } else {
+      setCards(stamp(SAMPLE_CARDS));
+    }
   }, []);
   useEffect(() => { save(cards); }, [cards]);
 
